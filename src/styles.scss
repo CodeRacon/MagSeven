@@ -1,0 +1,55 @@
+@import 'variables';
+
+* {
+	box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: $accent;
+}
+
+::-webkit-scrollbar-track {
+	background-color: $background;
+	border: 1px solid transparent;
+}
+
+html {
+	font-size: 16px;
+
+	@media (width <= 768px) {
+		font-size: 14px;
+	}
+
+	@media (width <= 375px) {
+		font-size: 12px;
+	}
+}
+
+button {
+	cursor: pointer;
+	border: unset;
+	background-color: unset;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+	max-width: 1440px;
+	background-image: $background;
+	margin: 0 auto;
+	padding: 0;
+	color: $text;
+}
