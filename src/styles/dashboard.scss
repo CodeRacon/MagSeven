@@ -1,0 +1,18 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
+.dashboard {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+	padding: 2rem;
+}
+.charts-container {
+	display: flex;
+	justify-content: space-between;
+}
+.bottom-charts {
+	display: flex;
+	justify-content: space-between;
+}
