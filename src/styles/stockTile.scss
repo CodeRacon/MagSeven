@@ -1,0 +1,26 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
+.stock-tile {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #2a5298;
+	border-radius: 16px;
+	padding: 16px;
+	margin: 8px;
+	text-align: center;
+	background-image: linear-gradient(315deg, #1e3c72 10%, #2a5298 90%);
+
+	.title {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		color: $text;
+		img {
+			width: 20px;
+			aspect-ratio: 1 / 1;
+			object-fit: contain;
+		}
+	}
+}
