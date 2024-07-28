@@ -2,15 +2,24 @@
 	<div class="stock-tile">
 		<div class="title">
 			<img :src="iconUrl" :alt="stock.name + ' logo'" class="company-logo" />
-			<h3>{{ stock.symbol }}</h3>
+			<h3>{{ stock.name }}</h3>
 		</div>
-		<div class="revenue-info">
-			<p>Revenue {{ formatQuarter(stock.quarter) }}</p>
-			<p>{{ formatRevenueChange(stock.currentRevenue) }}</p>
-			<p>{{ formatRevenueChange(stock.absoluteChange) }}</p>
-			<p>{{ formatGrowthPercentage(stock.relativeChange) }}</p>
-			<span>in Bill. USD</span>
+		<p class="revenue-quarter">Revenue {{ formatQuarter(stock.quarter) }}</p>
+
+		<div class="revenue-growth">
+			<p class="current-revenue">
+				{{ formatRevenueChange(stock.currentRevenue) }}
+			</p>
+			<div class="revenue-change">
+				<p :class="['change-absolute', swapColor]">
+					{{ formatRevenueChange(stock.absoluteChange) }}
+				</p>
+				<p :class="['change-percentage', swapColor]">
+					{{ formatGrowthPercentage(stock.relativeChange) }}
+				</p>
+			</div>
 		</div>
+		<span>in Bill. USD</span>
 	</div>
 </template>
 
@@ -26,6 +35,11 @@ export default {
 	computed: {
 		iconUrl() {
 			return require(`@/assets/icons/${this.stock.symbol}_icon.svg`);
+		},
+		swapColor() {
+			return parseFloat(this.stock.absoluteChange) >= 0
+				? 'positive'
+				: 'negative';
 		},
 	},
 	methods: {

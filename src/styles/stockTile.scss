@@ -4,23 +4,74 @@
 .stock-tile {
 	display: flex;
 	flex-direction: column;
-	border: 1px solid #2a5298;
-	border-radius: 16px;
+	align-items: flex-start;
+	max-width: 9rem;
+	max-height: 9rem;
 	padding: 16px;
 	margin: 8px;
+	border: 1px solid #2a5298;
+	border-radius: 16px;
 	text-align: center;
 	background-image: linear-gradient(315deg, #1e3c72 10%, #2a5298 90%);
+	cursor: pointer;
+
+	p {
+		margin: 0;
+	}
+
+	span {
+		font-size: 0.5rem;
+		color: $text;
+	}
 
 	.title {
 		display: flex;
 		align-items: center;
-		justify-content: center;
 		gap: 0.5rem;
 		color: $text;
+		margin-bottom: 0.25rem;
+
 		img {
 			width: 20px;
 			aspect-ratio: 1 / 1;
 			object-fit: contain;
+		}
+
+		h3 {
+			margin: 0;
+		}
+	}
+
+	p.revenue-quarter {
+		font-size: 0.75rem;
+		color: $text;
+	}
+
+	.revenue-growth {
+		display: flex;
+		align-items: center;
+		gap: 0.325rem;
+		font-size: 0.75rem;
+		font-weight: 700;
+		margin: 0.5rem 0;
+
+		.revenue-change {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		p.current-revenue {
+			font-size: 1.375rem;
+			font-weight: 700;
+			color: $text;
+		}
+
+		.positive {
+			color: $positive;
+		}
+		.negative {
+			color: $negative;
 		}
 	}
 }

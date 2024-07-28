@@ -20,9 +20,5 @@ export default {
 </script>
 
 <style lang="scss">
-.stock-tile-list {
-	display: flex;
-	justify-content: space-around;
-	flex-wrap: wrap;
-}
+@import '../styles/stockTileList.scss';
 </style>
