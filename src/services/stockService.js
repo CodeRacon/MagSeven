@@ -15,7 +15,7 @@ const stockSymbols = [
 ];
 
 const dataIndexes = {
-	AAPL: { recordedQuarters: 2, revenue: 4, netIncome: 35, grossMargin: 22 },
+	AAPL: { recordedQuarters: 2, revenue: 8, netIncome: 35, grossMargin: 22 },
 	AMZN: { recordedQuarters: 2, revenue: 8, netIncome: 40, grossMargin: 14 },
 	GOOG: { recordedQuarters: 2, revenue: 4, netIncome: 40, grossMargin: 24 },
 	META: { recordedQuarters: 2, revenue: 4, netIncome: 26, grossMargin: 10 },
@@ -59,9 +59,9 @@ const calculateTileData = (data, symbol) => {
 	const relativeChange = (absoluteChange / previousRevenue) * 100;
 
 	return {
-		currentRevenue: currentRevenue.toFixed(3),
+		currentRevenue: currentRevenue.toFixed(2),
 		quarter,
-		absoluteChange: absoluteChange.toFixed(3),
-		relativeChange: relativeChange.toFixed(1),
+		absoluteChange: absoluteChange.toFixed(2),
+		relativeChange: relativeChange.toFixed(2),
 	};
 };
