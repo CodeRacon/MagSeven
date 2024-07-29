@@ -5,16 +5,15 @@
 			<h3>{{ stock.name }}</h3>
 		</div>
 		<p class="revenue-quarter">Revenue {{ formatQuarter(stock.quarter) }}</p>
-
 		<div class="revenue-growth">
 			<p class="current-revenue">
 				{{ formatRevenueChange(stock.currentRevenue) }}
 			</p>
 			<div class="revenue-change">
-				<p :class="['change-absolute', swapColor]">
+				<p :class="['change-absolute', changeClass]">
 					{{ formatRevenueChange(stock.absoluteChange) }}
 				</p>
-				<p :class="['change-percentage', swapColor]">
+				<p :class="['change-percentage', changeClass]">
 					{{ formatGrowthPercentage(stock.relativeChange) }}
 				</p>
 			</div>
@@ -24,6 +23,8 @@
 </template>
 
 <script>
+import { formatQuarter } from '@/services/stockService';
+
 export default {
 	name: 'StockTile',
 	props: {
@@ -36,38 +37,19 @@ export default {
 		iconUrl() {
 			return require(`@/assets/icons/${this.stock.symbol}_icon.svg`);
 		},
-		swapColor() {
+		changeClass() {
 			return parseFloat(this.stock.absoluteChange) >= 0
 				? 'positive'
 				: 'negative';
 		},
 	},
 	methods: {
-		formatQuarter(quarter) {
-			const parts = quarter.replace('-', ' ').split(/\s+/);
-			let q, year;
-
-			if (parts.length === 2) {
-				if (parts[0].startsWith('Q')) {
-					[q, year] = parts;
-				} else {
-					[year, q] = parts;
-				}
-			} else {
-				q = parts[0].slice(-2);
-				year = parts[0].slice(0, -2);
-			}
-
-			year = year.length === 2 ? '20' + year : year;
-			q = q.startsWith('Q') ? q : 'Q' + q;
-
-			return `${q} ${year}`;
-		},
+		formatQuarter,
 		formatRevenueChange(change) {
-			return change;
+			return parseFloat(change).toFixed(2);
 		},
 		formatGrowthPercentage(growth) {
-			return `${growth}%`;
+			return `${parseFloat(growth).toFixed(2)}%`;
 		},
 	},
 };
