@@ -7,15 +7,26 @@
 	align-items: center;
 	height: 100vh;
 	max-width: 100%;
-	padding: 2rem;
 	margin: auto 2rem;
 	border: white solid 2px;
-}
-.charts-container {
-	display: flex;
-	justify-content: space-between;
-}
-.bottom-charts {
-	display: flex;
-	justify-content: space-between;
+
+	section {
+		width: 100%;
+		padding: 1rem 2rem;
+		border: 2px blue solid;
+	}
+
+	.center {
+		display: flex;
+		justify-content: space-between;
+
+		.line-chart {
+			width: 60%;
+			height: 20rem;
+		}
+	}
+	.bottom {
+		display: flex;
+		justify-content: space-between;
+	}
 }
