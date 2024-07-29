@@ -31,11 +31,7 @@ export const fetchStockData = async () => {
 			const response = await axios.get(
 				`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/$${stock.symbol}!A1:BE47?key=${API_KEY}`
 			);
-			stockData[stock.name] = {
-				...calculateTileData(response.data, stock.symbol),
-				name: stock.name,
-				symbol: stock.symbol,
-			};
+			stockData[stock.symbol] = response.data;
 		}
 		return stockData;
 	} catch (error) {
@@ -43,9 +39,38 @@ export const fetchStockData = async () => {
 		throw error;
 	}
 };
+export const prepareStockTileData = (data) => {
+	const tileData = {};
+	for (const stock of stockSymbols) {
+		tileData[stock.name] = calculateTileData(data[stock.symbol], stock.symbol);
+		tileData[stock.name].name = stock.name;
+		tileData[stock.name].symbol = stock.symbol;
+	}
+	return tileData;
+};
 
-const parseCommaNumber = (value) => {
-	return parseFloat(value.replace(',', '.'));
+export const prepareRevenueChartData = (data) => {
+	const chartData = {
+		labels: [],
+		datasets: [],
+	};
+
+	const quarters = data[stockSymbols[0].symbol].values[2].slice(-13);
+	chartData.labels = quarters.map((quarter) => formatQuarter(quarter));
+	console.log(chartData);
+
+	stockSymbols.forEach((stock, index) => {
+		const companyData =
+			data[stock.symbol].values[dataIndexes[stock.symbol].revenue].slice(-13);
+		chartData.datasets.push({
+			label: stock.name,
+			data: companyData.map((value) => parseCommaNumber(value)),
+			borderColor: getColor(index),
+			fill: false,
+		});
+	});
+
+	return chartData;
 };
 
 const calculateTileData = (data, symbol) => {
@@ -59,9 +84,47 @@ const calculateTileData = (data, symbol) => {
 	const relativeChange = (absoluteChange / previousRevenue) * 100;
 
 	return {
-		currentRevenue: currentRevenue.toFixed(2),
+		currentRevenue: currentRevenue.toFixed(3),
 		quarter,
-		absoluteChange: absoluteChange.toFixed(2),
-		relativeChange: relativeChange.toFixed(2),
+		absoluteChange: absoluteChange.toFixed(3),
+		relativeChange: relativeChange.toFixed(1),
 	};
+};
+
+const parseCommaNumber = (value) => {
+	return parseFloat(value.replace(',', '.'));
+};
+
+export const formatQuarter = (quarter) => {
+	const parts = quarter.replace('-', ' ').split(/\s+/);
+	let q, year;
+
+	if (parts.length === 2) {
+		if (parts[0].startsWith('Q')) {
+			[q, year] = parts;
+		} else {
+			[year, q] = parts;
+		}
+	} else {
+		q = parts[0].slice(-2);
+		year = parts[0].slice(0, -2);
+	}
+
+	year = year.length === 2 ? '20' + year : year;
+	q = q.startsWith('Q') ? q : 'Q' + q;
+
+	return `${q} ${year}`;
+};
+
+const getColor = (index) => {
+	const colors = [
+		'#7dffef',
+		'#7dd0ff',
+		'#7da1ff',
+		'#8b7dff',
+		'#b67dff',
+		'#e57dff',
+		'#ff7dbf',
+	];
+	return colors[index % colors.length];
 };
