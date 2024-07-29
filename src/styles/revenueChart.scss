@@ -1,0 +1,9 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
+.revenue-chart {
+	height: 100%;
+	padding: 1.5rem;
+	background-image: linear-gradient(315deg, #0f1d38 10%, #182c4e 90%);
+	border-radius: 1.25rem;
+}
