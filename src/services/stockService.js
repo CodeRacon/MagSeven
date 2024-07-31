@@ -91,6 +91,25 @@ const calculateTileData = (data, symbol) => {
 	};
 };
 
+export const calculateTTMRevenue = (data) => {
+	const ttmRevenue = {};
+	const colors = [];
+
+	stockSymbols.forEach((stock, index) => {
+		const revenueData =
+			data[stock.symbol].values[dataIndexes[stock.symbol].revenue];
+		const lastFourQuarters = revenueData.slice(-4);
+		const ttm = lastFourQuarters.reduce(
+			(sum, value) => sum + parseCommaNumber(value),
+			0
+		);
+		ttmRevenue[stock.name] = ttm;
+		colors.push(getColor(index));
+	});
+
+	return { ttmRevenue, colors };
+};
+
 const parseCommaNumber = (value) => {
 	return parseFloat(value.replace(',', '.'));
 };
@@ -118,13 +137,13 @@ export const formatQuarter = (quarter) => {
 
 const getColor = (index) => {
 	const colors = [
-		'#7dffef',
-		'#7dd0ff',
-		'#7da1ff',
-		'#8b7dff',
-		'#b67dff',
-		'#e57dff',
+		'#ff7d7d',
 		'#ff7dbf',
+		'#b67dff',
+		'#8b7dff',
+		'#7da1ff',
+		'#7dd0ff',
+		'#7dffef',
 	];
 	return colors[index % colors.length];
 };
