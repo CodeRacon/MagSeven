@@ -32,73 +32,119 @@ ChartJS.register(
 	PointElement
 );
 
+const tickTextColor = '#cddae5';
+const textColor = '#fff';
+const gridColor = 'rgba(255, 255, 255, 0.075)';
+
 export default {
 	name: 'RevenueChart',
 	components: { Line },
 	props: {
-		stockData: {
+		chartData: {
 			type: Object,
 			required: true,
 		},
 	},
+
 	setup(props) {
 		const chartData = ref(null);
 
 		const computedChartData = computed(() => {
-			if (
-				chartData.value &&
-				chartData.value.labels &&
-				chartData.value.datasets
-			) {
+			if (chartData.value && chartData.value.datasets) {
 				return {
 					labels: chartData.value.labels,
-					datasets: chartData.value.datasets,
+					datasets: chartData.value.datasets.map((dataset) => ({
+						...dataset,
+						pointRadius: 10,
+						pointHoverRadius: 10,
+
+						pointBorderColor: 'transparent',
+						pointHoverBorderColor: 'transparent',
+
+						pointBackgroundColor: 'transparent',
+						pointHoverBackgroundColor: 'transparent',
+
+						borderWidth: 1,
+						hoverBorderWidth: 3,
+						hoverBorderColor: dataset.borderColor,
+					})),
 				};
 			}
 			return null;
 		});
 
+		const hoverPlugin = {
+			id: 'hoverPlugin',
+			defaults: {
+				hoverLineWidth: 3,
+				normalLineWidth: 1,
+			},
+			beforeDraw: (chart, _, options) => {
+				const activeElements = chart.getActiveElements();
+				if (activeElements.length > 0) {
+					const datasetIndex = activeElements[0].datasetIndex;
+					chart.data.datasets.forEach((_, index) => {
+						const meta = chart.getDatasetMeta(index);
+						meta.dataset.options.borderWidth =
+							index === datasetIndex
+								? options.hoverLineWidth
+								: options.normalLineWidth;
+					});
+				}
+			},
+		};
+
+		ChartJS.register(hoverPlugin);
+
 		const chartOptions = ref({
 			responsive: true,
 			maintainAspectRatio: false,
-			pointStyle: false,
+			pointStyle: true,
 			tension: 0.325,
-			borderWidth: 1,
-			color: '#ffffff',
+			color: textColor,
+
+			interaction: {
+				mode: 'nearest',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: false,
+			},
 
 			scales: {
 				y: {
 					beginAtZero: true,
 					title: {
-						color: '#ffffff',
+						color: tickTextColor,
 					},
 					ticks: {
 						padding: 10,
-						color: '#ffffff',
+						color: tickTextColor,
 						callback: function (value, index) {
 							return index % 2 === 0 ? value : '';
 						},
 						font: {
-							size: 10,
+							size: 9,
 						},
 					},
 					grid: {
 						drawTicks: false,
-						color: 'rgba(255, 255, 255, 0.075)',
+						color: gridColor,
 					},
 				},
 
 				x: {
 					ticks: {
 						padding: 10,
-						color: '#ffffff',
+						color: tickTextColor,
 						font: {
-							size: 10,
+							size: 9,
 						},
 					},
 					grid: {
 						drawTicks: false,
-						color: 'rgba(255, 255, 255, 0.075)',
+						color: gridColor,
 					},
 				},
 			},
@@ -107,6 +153,7 @@ export default {
 				tooltip: {
 					mode: 'nearest',
 					intersect: false,
+
 					callbacks: {
 						title: (context) => {
 							return context[0].label;
@@ -120,6 +167,7 @@ export default {
 							return {
 								backgroundColor: context.dataset.borderColor,
 								borderColor: 'unset',
+								strokeStyle: 'transparent',
 							};
 						},
 					},
@@ -129,7 +177,7 @@ export default {
 					align: 'start',
 					display: true,
 					text: 'Revenue of the last 3 years',
-					color: '#ffffff',
+					color: textColor,
 					font: {
 						size: 16,
 					},
@@ -140,38 +188,39 @@ export default {
 						left: 200,
 					},
 					labels: {
-						usePointStyle: false,
+						usePointStyle: true,
 						boxWidth: 32,
 						boxHeight: 10,
-						color: '#ffffff',
-
+						color: textColor,
 						font: {
 							size: 12,
 						},
 						generateLabels: (chart) => {
 							const datasets = chart.data.datasets;
-							return datasets.map((dataset, i) => ({
-								text: dataset.label,
-								fillStyle: dataset.borderColor,
-								strokeStyle: '#ffffff',
-								color: '#ffffff',
-								fontColor: '#ffffff',
-
-								lineWidth: 1,
-								hidden: !chart.isDatasetVisible(i),
-								index: i,
-							}));
+							return datasets.map((dataset, i) => {
+								const lastValue = dataset.data[dataset.data.length - 1];
+								return {
+									text: `${dataset.label} ${lastValue.toFixed(2)} `,
+									fillStyle: dataset.borderColor,
+									strokeStyle: 'transparent',
+									fontColor: textColor,
+									lineWidth: 1,
+									hidden: !chart.isDatasetVisible(i),
+									index: i,
+								};
+							});
 						},
+						useHTML: true,
 					},
 				},
 			},
 		});
 
 		watch(
-			() => props.stockData,
-			(newStockData) => {
-				if (Object.keys(newStockData).length > 0) {
-					chartData.value = newStockData;
+			() => props.chartData,
+			(newChartData) => {
+				if (newChartData) {
+					chartData.value = newChartData;
 					console.log(
 						'Chart-Daten in RevenueChart:',
 						JSON.stringify(chartData.value, null, 2)
