@@ -1,9 +1,31 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
 .stock-tile-list {
+	position: relative;
+	z-index: 10;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	width: 100%;
 	padding: 1.5rem;
-	background-image: linear-gradient(315deg, #0f1d38 10%, #182c4e 90%);
+	gap: 0.75rem;
+	background-image: $bgGradient;
 	border-radius: 1.25rem;
+
 	overflow-x: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	&.left-overflow {
+		border-left: 6px solid #1571c1;
+	}
+
+	&.right-overflow {
+		border-right: 6px solid #1571c1;
+	}
 }
