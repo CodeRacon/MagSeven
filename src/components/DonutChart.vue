@@ -15,15 +15,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const hoverPlugin = {
-	id: 'hoverPlugin',
-	beforeDraw: (chart) => {
-		if (!chart || !chart.getActiveElements) return;
-	},
-};
-
-ChartJS.register(hoverPlugin);
-
 const textColor = '#fff';
 
 export default {
@@ -64,13 +55,20 @@ export default {
 			maintainAspectRatio: false,
 			cutout: '40%',
 			plugins: {
+				hoverPlugin: {
+					id: 'hoverPlugin',
+					beforeDraw: (chart) => {
+						if (!chart || !chart.getActiveElements) return;
+					},
+				},
+
 				title: {
 					align: 'start',
 					display: true,
 					text: 'Revenue Breakdown of the MagSeven',
 					color: textColor,
 					font: {
-						size: 16,
+						size: 20,
 					},
 				},
 				legend: {
@@ -88,6 +86,7 @@ export default {
 							return data.labels.map((label, i) => ({
 								text: `${label} ${data.datasets[0].data[i].toFixed(2)} `,
 								fillStyle: data.datasets[0].backgroundColor[i],
+
 								strokeStyle: 'transparent',
 								fontColor: textColor,
 								index: i,
@@ -96,11 +95,22 @@ export default {
 					},
 				},
 				tooltip: {
+					usePointStyle: true,
+					boxPadding: 4,
+					borderWidth: 0,
 					callbacks: {
 						label: (context) => {
 							const label = context.label || '';
 							const value = context.parsed || 0;
 							return `${label}: ${value.toFixed(2)} Bill. USD`;
+						},
+						labelColor: (context) => {
+							return {
+								backgroundColor:
+									context.dataset.backgroundColor[context.dataIndex],
+
+								borderColor: context.dataset.backgroundColor[context.dataIndex],
+							};
 						},
 					},
 				},
