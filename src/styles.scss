@@ -43,15 +43,11 @@ a {
 }
 
 body {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 	width: 100%;
 	min-height: 100vh;
 	max-width: 1440px;
 	margin: 0 auto;
 	padding: 0;
-	background-image: linear-gradient(0deg, #7950f2 5%, #4dabf7 95%);
 
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -62,4 +58,10 @@ body {
 #app {
 	width: 100%;
 	min-height: 100vh;
+
+	height: auto;
+
+	background-image: linear-gradient(180deg, #103657 5%, #0b2c49 95%);
+	background-size: 100%;
+	background-repeat: no-repeat;
 }
