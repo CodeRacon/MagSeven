@@ -5,15 +5,19 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	height: 100vh;
 	max-width: 100%;
 	margin: auto 2rem;
-	border: white solid 2px;
 
 	section {
 		width: 100%;
-		padding: 1rem 2rem;
-		border: 2px blue solid;
+		padding: 0.5rem 2rem;
+	}
+
+	.heading {
+		width: 100%;
+		padding-left: 3.5rem;
+		color: #fff;
+		text-align: left;
 	}
 
 	.center {
@@ -21,12 +25,34 @@
 		justify-content: space-between;
 
 		.line-chart {
-			width: 60%;
-			height: 20rem;
+			width: calc(60% - 0.5rem);
+			height: 22rem;
+		}
+
+		.ttm-chart {
+			width: calc(40% - 0.5rem);
+			height: 22rem;
 		}
 	}
 	.bottom {
 		display: flex;
 		justify-content: space-between;
+
+		.bar-charts {
+			display: flex;
+			justify-content: space-between;
+			width: calc(60% - 0.5rem);
+			height: 18rem;
+
+			.netincome-bar-chart-1,
+			.netincome-bar-chart-2 {
+				width: calc(50% - 0.5rem);
+			}
+		}
+
+		.netincome-bar-chart-3 {
+			width: calc(40% - 0.5rem);
+			height: 18rem;
+		}
 	}
 }
