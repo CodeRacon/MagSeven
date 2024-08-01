@@ -110,6 +110,35 @@ export const calculateTTMRevenue = (data) => {
 	return { ttmRevenue, colors };
 };
 
+export const prepareNetIncomeTTMData = (data) => {
+	const netIncomeTTM = {};
+
+	stockSymbols.forEach((stock) => {
+		const netIncomeData =
+			data[stock.symbol].values[dataIndexes[stock.symbol].netIncome];
+		const lastFourQuarters = netIncomeData.slice(-4);
+		const ttm = lastFourQuarters.reduce(
+			(sum, value) => sum + parseCommaNumber(value),
+			0
+		);
+		netIncomeTTM[stock.name] = parseFloat(ttm.toFixed(2));
+	});
+
+	const sortedData = Object.entries(netIncomeTTM)
+		.sort(([, a], [, b]) => b - a)
+		.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+
+	return {
+		labels: Object.keys(sortedData),
+		datasets: [
+			{
+				data: Object.values(sortedData),
+				backgroundColor: stockSymbols.map((_, index) => getColor(index)),
+			},
+		],
+	};
+};
+
 const parseCommaNumber = (value) => {
 	return parseFloat(value.replace(',', '.'));
 };
