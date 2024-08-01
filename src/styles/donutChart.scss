@@ -3,11 +3,7 @@
 
 .donut-chart {
 	height: 100%;
-	padding: 1.5rem;
+	padding: 1.25rem;
 	background-image: $bgGradient;
 	border-radius: 1.25rem;
-
-	canvas {
-		width: 75%;
-	}
 }
