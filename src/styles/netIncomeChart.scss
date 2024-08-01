@@ -1,0 +1,9 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
+.net-income-chart {
+	height: 100%;
+	padding: 1.25rem;
+	background-image: $bgGradient;
+	border-radius: 1.25rem;
+}
