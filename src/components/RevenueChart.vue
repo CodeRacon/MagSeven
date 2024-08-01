@@ -85,10 +85,12 @@ export default {
 					const datasetIndex = activeElements[0].datasetIndex;
 					chart.data.datasets.forEach((_, index) => {
 						const meta = chart.getDatasetMeta(index);
-						meta.dataset.options.borderWidth =
-							index === datasetIndex
-								? options.hoverLineWidth
-								: options.normalLineWidth;
+						if (meta.dataset && meta.dataset.options) {
+							meta.dataset.options.borderWidth =
+								index === datasetIndex
+									? options.hoverLineWidth
+									: options.normalLineWidth;
+						}
 					});
 				}
 			},
@@ -151,6 +153,9 @@ export default {
 
 			plugins: {
 				tooltip: {
+					usePointStyle: true,
+					boxPadding: 4,
+					borderWidth: 0,
 					mode: 'nearest',
 					intersect: false,
 
@@ -166,8 +171,7 @@ export default {
 						labelColor: (context) => {
 							return {
 								backgroundColor: context.dataset.borderColor,
-								borderColor: 'unset',
-								strokeStyle: 'transparent',
+								borderColor: context.dataset.borderColor,
 							};
 						},
 					},
@@ -179,7 +183,7 @@ export default {
 					text: 'Revenue of the last 3 years',
 					color: textColor,
 					font: {
-						size: 16,
+						size: 20,
 					},
 				},
 				legend: {
