@@ -1,5 +1,8 @@
 <template>
 	<div class="dashboard" v-if="isDataLoaded">
+		<div class="heading">
+			<h1>The M7 Stock Earning Dashboard</h1>
+		</div>
 		<section class="top">
 			<stock-tile-list :stocks="stocks" />
 		</section>
@@ -11,7 +14,20 @@
 				<donut-chart :chartData="donutChartData" />
 			</div>
 		</section>
-		<section class="bottom"></section>
+		<section class="bottom">
+			<div class="bar-charts">
+				<div class="netincome-bar-chart-1">
+					<net-income-chart :chartData="netIncomeChartData" />
+				</div>
+				<div class="netincome-bar-chart-2">
+					<net-income-chart :chartData="netIncomeChartData" />
+				</div>
+			</div>
+
+			<div class="netincome-bar-chart-3">
+				<net-income-chart :chartData="netIncomeChartData" />
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -22,10 +38,12 @@ import {
 	prepareStockTileData,
 	prepareRevenueChartData,
 	calculateTTMRevenue,
+	prepareNetIncomeTTMData,
 } from '@/services/stockService';
 import StockTileList from '@/components/StockTileList.vue';
 import RevenueChart from '@/components/RevenueChart.vue';
 import DonutChart from '@/components/DonutChart.vue';
+import NetIncomeChart from '@/components/NetIncomeChart.vue';
 
 export default {
 	name: 'DashboardView',
@@ -33,12 +51,15 @@ export default {
 		StockTileList,
 		RevenueChart,
 		DonutChart,
+		NetIncomeChart,
 	},
 	setup() {
 		const rawStockData = ref(null);
 		const stocks = ref([]);
 		const revenueChartData = ref(null);
 		const donutChartData = ref(null);
+		const netIncomeChartData = ref(null);
+
 		const isDataLoaded = computed(() => rawStockData.value !== null);
 
 		const loadStockData = async () => {
@@ -47,6 +68,7 @@ export default {
 				stocks.value = Object.values(prepareStockTileData(rawStockData.value));
 				revenueChartData.value = prepareRevenueChartData(rawStockData.value);
 				donutChartData.value = calculateTTMRevenue(rawStockData.value);
+				netIncomeChartData.value = prepareNetIncomeTTMData(rawStockData.value);
 			} catch (error) {
 				console.error('Error loading stock data:', error);
 			}
@@ -58,6 +80,8 @@ export default {
 			stocks,
 			revenueChartData,
 			donutChartData,
+			netIncomeChartData,
+
 			isDataLoaded,
 		};
 	},
