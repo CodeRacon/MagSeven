@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
 import { Line } from 'vue-chartjs';
 import {
 	Chart as ChartJS,
@@ -46,6 +46,18 @@ export default {
 		},
 	},
 
+	/**
+	 * Computes the chart data and options for the revenue chart component.
+	 *
+	 * The `setup` function is responsible for the following:
+	 * - Initializing the `chartData` reactive ref and computing the `computedChartData` based on the `chartData` prop.
+	 * - Handling screen width changes and updating the `legendPosition` computed property accordingly.
+	 * - Registering a custom "hoverPlugin" to handle the hover behavior of the chart.
+	 * - Defining the `chartOptions` object with various configurations for the chart, such as scales, tooltip, and legend.
+	 * - Watching for changes in the `chartData` prop and updating the `chartData` ref accordingly.
+	 *
+	 * The computed properties and reactive refs returned by the `setup` function are used in the component's template to render the chart.
+	 */
 	setup(props) {
 		const chartData = ref(null);
 
@@ -72,6 +84,23 @@ export default {
 			}
 			return null;
 		});
+
+		const screenWidth = ref(window.innerWidth);
+		const updateScreenWidth = () => {
+			screenWidth.value = window.innerWidth;
+		};
+
+		onMounted(() => {
+			window.addEventListener('resize', updateScreenWidth);
+		});
+
+		onUnmounted(() => {
+			window.removeEventListener('resize', updateScreenWidth);
+		});
+
+		const legendPosition = computed(() =>
+			screenWidth.value < 960 ? 'bottom' : 'right'
+		);
 
 		const hoverPlugin = {
 			id: 'hoverPlugin',
@@ -187,24 +216,22 @@ export default {
 					},
 				},
 				legend: {
-					position: 'right',
-					margin: {
-						left: 200,
-					},
+					position: legendPosition,
+
 					labels: {
 						usePointStyle: true,
 						boxWidth: 32,
-						boxHeight: 10,
+						boxHeight: 8,
 						color: textColor,
 						font: {
-							size: 12,
+							size: 10,
 						},
 						generateLabels: (chart) => {
 							const datasets = chart.data.datasets;
 							return datasets.map((dataset, i) => {
 								const lastValue = dataset.data[dataset.data.length - 1];
 								return {
-									text: `${dataset.label} ${lastValue.toFixed(2)} `,
+									text: `${dataset.label} → ${lastValue.toFixed(2)} `,
 									fillStyle: dataset.borderColor,
 									strokeStyle: 'transparent',
 									fontColor: textColor,
@@ -225,10 +252,6 @@ export default {
 			(newChartData) => {
 				if (newChartData) {
 					chartData.value = newChartData;
-					console.log(
-						'Chart-Daten in RevenueChart:',
-						JSON.stringify(chartData.value, null, 2)
-					);
 				}
 			},
 			{ immediate: true }
@@ -237,6 +260,7 @@ export default {
 		return {
 			computedChartData,
 			chartOptions,
+			legendPosition,
 		};
 	},
 };
