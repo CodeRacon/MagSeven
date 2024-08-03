@@ -25,6 +25,14 @@
 <script>
 import { formatQuarter } from '@/services/stockService';
 
+/**
+ * The `StockTile` component represents a visual tile for displaying information about a stock.
+ * It receives a `stock` prop of type `Object` which contains the necessary data to display the stock information.
+ *
+ * The component computes the URL for the company logo icon, and a CSS class based on the sign of the stock's absolute revenue change.
+ *
+ * It also provides several methods to format the revenue change and growth percentage for display.
+ */
 export default {
 	name: 'StockTile',
 	props: {
