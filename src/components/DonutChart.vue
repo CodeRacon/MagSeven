@@ -9,7 +9,8 @@
 </template>
 
 <script>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
+
 import { Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
@@ -27,6 +28,18 @@ export default {
 		},
 	},
 
+	/**
+	 * The `setup` function is a Vue.js composition API function that is called when the component is created. It sets up the state and computed properties for the donut chart component.
+	 *
+	 * The function takes in `props` as a parameter, which contains the `chartData` prop passed down to the component.
+	 *
+	 * The function returns an object with the following properties:
+	 * - `computedChartData`: a computed property that transforms the `chartData` prop into the format required by the Doughnut chart component.
+	 * - `chartOptions`: an object that configures the options for the Doughnut chart, including the title, legend, and tooltip.
+	 * - `legendPosition`: a computed property that determines the position of the legend based on the screen width.
+	 *
+	 * The function also sets up event listeners for window resize events to update the `screenWidth` reactive variable, which is used to determine the legend position.
+	 */
 	setup(props) {
 		const chartData = ref(null);
 
@@ -50,6 +63,23 @@ export default {
 			return null;
 		});
 
+		const screenWidth = ref(window.innerWidth);
+		const updateScreenWidth = () => {
+			screenWidth.value = window.innerWidth;
+		};
+
+		onMounted(() => {
+			window.addEventListener('resize', updateScreenWidth);
+		});
+
+		onUnmounted(() => {
+			window.removeEventListener('resize', updateScreenWidth);
+		});
+
+		const legendPosition = computed(() =>
+			screenWidth.value < 768 ? 'bottom' : 'right'
+		);
+
 		const chartOptions = ref({
 			responsive: true,
 			maintainAspectRatio: false,
@@ -65,26 +95,26 @@ export default {
 				title: {
 					align: 'start',
 					display: true,
-					text: 'Revenue Breakdown of the MagSeven',
+					text: 'Revenue Breakdown',
 					color: textColor,
 					font: {
 						size: 20,
 					},
 				},
 				legend: {
-					position: 'right',
+					position: legendPosition,
 					labels: {
 						usePointStyle: true,
 
-						boxHeight: 10,
+						boxHeight: 8,
 						color: textColor,
 						font: {
-							size: 12,
+							size: 10,
 						},
 						generateLabels: (chart) => {
 							const data = chart.data;
 							return data.labels.map((label, i) => ({
-								text: `${label} ${data.datasets[0].data[i].toFixed(2)} `,
+								text: `${label} → ${data.datasets[0].data[i].toFixed(2)} `,
 								fillStyle: data.datasets[0].backgroundColor[i],
 
 								strokeStyle: 'transparent',
@@ -130,6 +160,7 @@ export default {
 		return {
 			computedChartData,
 			chartOptions,
+			legendPosition,
 		};
 	},
 };
