@@ -1,0 +1,109 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+
+.heading {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	width: 100%;
+
+	h2 {
+		width: fit-content;
+		font-size: 20px;
+		color: #fff;
+		text-align: left;
+		margin: 0;
+	}
+
+	.labels {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.term-label,
+	.chart-label {
+		display: flex;
+		width: fit-content;
+		align-items: center;
+		gap: 0.25rem;
+		color: #fff;
+	}
+
+	.chart {
+		border-radius: 50%;
+		background-color: #4e55b8;
+		width: 12px;
+		height: 12px;
+	}
+
+	.term {
+		border-radius: 50%;
+		background-color: #37699f;
+		width: 12px;
+		height: 12px;
+	}
+}
+
+.glossary {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	text-align: left;
+	font-size: 1rem;
+
+	@media (width <= 872px) {
+		font-size: 12px;
+	}
+
+	@media (width <= 560px) {
+		font-size: 14px;
+	}
+
+	.glossary-list {
+		overflow-y: auto;
+		list-style-type: none;
+		padding: 0;
+		margin-top: 0.5rem;
+
+		& li:nth-last-child(-n + 6) .glossary-item {
+			background-color: #4e55b8;
+		}
+
+		& li:nth-last-child(-n + 6) .glossary-explanation {
+			background-color: #e0e2ff;
+		}
+	}
+
+	.glossary-item {
+		width: calc(100% - 0.25rem);
+		padding: 0.5rem;
+		margin-bottom: 0.25rem;
+		color: #fff;
+		font-weight: 600;
+		background-color: #37699f;
+		border-radius: 0.325rem;
+		cursor: pointer;
+	}
+
+	.glossary-explanation {
+		width: calc(100% - 0.25rem);
+		padding: 0.5rem;
+		margin-top: 0;
+		background-color: #d8e6fc;
+		border-radius: 0.325rem;
+		text-wrap: balance;
+	}
+
+	.fade-enter-active,
+	.fade-leave-active {
+		transition: all 0.25s ease-in-out;
+		max-height: 200px;
+		overflow: hidden;
+	}
+
+	.fade-enter,
+	.fade-leave-to {
+		opacity: 0;
+		max-height: 0;
+	}
+}
