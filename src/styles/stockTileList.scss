@@ -22,10 +22,10 @@
 	}
 
 	&.left-overflow {
-		border-left: 6px solid #1571c1;
+		border-left: 6px solid $accent;
 	}
 
 	&.right-overflow {
-		border-right: 6px solid #1571c1;
+		border-right: 6px solid $accent;
 	}
 }
